@@ -1,4 +1,5 @@
 use axum::{extract::State, response::IntoResponse, routing::get, Json, Router};
+use axum_extra::response::ErasedJson;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::{
@@ -31,7 +32,7 @@ fn init_data() -> Index {
 }
 
 async fn get_item_list(list: State<Arc<RwLock<Index>>>) -> impl IntoResponse {
-    Json(json!(*list.read().unwrap()))
+    ErasedJson::pretty(json!(*list.read().unwrap()))
 }
 
 #[derive(Serialize, Deserialize)]
@@ -53,12 +54,12 @@ async fn upsert_item(
     fs::write(DATA_PATH, content).expect("failed to save data to file");
 
     match result {
-        Some(old) => Json(json!({
+        Some(old) => ErasedJson::pretty(json!({
             "updated": request.id,
             "old": old,
             "new": request.data
         })),
-        None => Json(json!({
+        None => ErasedJson::pretty(json!({
             "created": request.id,
             "data": request.data
         })),
@@ -79,12 +80,12 @@ async fn delete_item(
         Some(data) => {
             let content = serde_json::to_vec_pretty(&*list.read().unwrap()).unwrap();
             fs::write(DATA_PATH, content).expect("failed to save data to file");
-            Json(json!({
+            ErasedJson::pretty(json!({
                 "deleted": request.id,
                 "data": data,
             }))
         }
-        None => Json(json!({ "not exists": request.id })),
+        None => ErasedJson::pretty(json!({ "not exists": request.id })),
     }
 }
 
