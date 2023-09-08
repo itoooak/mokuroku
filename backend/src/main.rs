@@ -1,4 +1,10 @@
-use axum::{extract::State, response::IntoResponse, routing::get, Json, Router};
+use axum::{
+    extract::{Path, State},
+    http::StatusCode,
+    response::IntoResponse,
+    routing::get,
+    Json, Router,
+};
 use axum_extra::response::ErasedJson;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
@@ -89,6 +95,16 @@ async fn delete_item(
     }
 }
 
+async fn get_item(list: State<Arc<RwLock<Index>>>, Path(id): Path<ID>) -> impl IntoResponse {
+    match list.read().unwrap().get(&id) {
+        Some(data) => (
+            StatusCode::OK,
+            ErasedJson::pretty(json!({ "id": id, "data": data })),
+        ),
+        None => (StatusCode::NOT_FOUND, ErasedJson::pretty(json!({}))),
+    }
+}
+
 #[tokio::main]
 async fn main() {
     let app = Router::new()
@@ -97,6 +113,7 @@ async fn main() {
             "/books",
             get(get_item_list).post(upsert_item).delete(delete_item),
         )
+        .route("/books/:id", get(get_item))
         .with_state(Arc::new(RwLock::new(init_data())));
 
     axum::Server::bind(&"127.0.0.1:3000".parse().unwrap())
