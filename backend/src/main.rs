@@ -65,11 +65,37 @@ async fn upsert_item(
     }
 }
 
+#[derive(Serialize, Deserialize)]
+struct DeleteRequest {
+    id: ID,
+}
+
+async fn delete_item(
+    list: State<Arc<RwLock<Index>>>,
+    Json(request): Json<DeleteRequest>,
+) -> impl IntoResponse {
+    let result = (*list).write().unwrap().remove(&request.id);
+    match result {
+        Some(data) => {
+            let content = serde_json::to_vec_pretty(&*list.read().unwrap()).unwrap();
+            fs::write(DATA_PATH, content).expect("failed to save data to file");
+            Json(json!({
+                "deleted": request.id,
+                "data": data,
+            }))
+        }
+        None => Json(json!({ "not exists": request.id })),
+    }
+}
+
 #[tokio::main]
 async fn main() {
     let app = Router::new()
         .route("/", get(|| async { "Hello, World!" }))
-        .route("/books", get(get_item_list).post(upsert_item))
+        .route(
+            "/books",
+            get(get_item_list).post(upsert_item).delete(delete_item),
+        )
         .with_state(Arc::new(RwLock::new(init_data())));
 
     axum::Server::bind(&"127.0.0.1:3000".parse().unwrap())
