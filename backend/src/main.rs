@@ -31,10 +31,7 @@ fn init_data() -> Index {
 }
 
 async fn get_item_list(list: State<Arc<RwLock<Index>>>) -> impl IntoResponse {
-    let items = list.read().unwrap();
-    let content = serde_json::to_vec_pretty(&*items).unwrap();
-    fs::write(DATA_PATH, content).expect("failed to save data to file");
-    Json(json!(*items))
+    Json(json!(*list.read().unwrap()))
 }
 
 #[derive(Serialize, Deserialize)]
@@ -47,11 +44,15 @@ async fn upsert_item(
     list: State<Arc<RwLock<Index>>>,
     Json(request): Json<UpsertRequest>,
 ) -> impl IntoResponse {
-    match (*list)
+    let result = (*list)
         .write()
         .unwrap()
-        .insert(request.id.clone(), request.data.clone())
-    {
+        .insert(request.id.clone(), request.data.clone());
+
+    let content = serde_json::to_vec_pretty(&*list.read().unwrap()).unwrap();
+    fs::write(DATA_PATH, content).expect("failed to save data to file");
+
+    match result {
         Some(old) => Json(json!({
             "updated": request.id,
             "old": old,
