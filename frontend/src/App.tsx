@@ -3,11 +3,13 @@ import axios from 'axios'
 import List from './List';
 import AddItemPanel from './AddItemPanel';
 
+const API_URL_BASE = "http://127.0.0.1:3000";
+
 function App() {
   const [index, setIndex] = useState<Index>(new Map());
 
   useEffect(() => {
-    axios.get("http://127.0.0.1:3000/books")
+    axios.get(API_URL_BASE + "/books")
       .then((resp) => resp.data)
       .then(Object.entries)
       .then((entries) => {
@@ -25,20 +27,21 @@ function App() {
       return false
     }
 
-    const responseData = await axios.post(
-      "http://127.0.0.1:3000/books",
+    const status = await axios.post(
+      API_URL_BASE + "/books",
       { id: id, data: data }
     )
-      .then((resp) => resp.data as CreateResponse)
+      .then((resp) => resp.status)
       .catch(console.log)
 
-    if (responseData === undefined) {
+    if (status !== 200) {
       return false
     }
 
     const newIndex = new Map(index)
-    newIndex.set(responseData.id, responseData.new)
+    newIndex.set(id, data)
     setIndex(newIndex)
+
     return true
   }
 
@@ -47,28 +50,18 @@ function App() {
       return false
     }
 
-    const responseData = await axios.delete(
-      "http://127.0.0.1:3000/books",
-      {
-        headers: {},
-        data: { id: id },
-      }
-    )
-      .then((resp) => {
-        if (resp.status != 200)
-          throw Error("not found")
-
-        return resp.data as DeleteResponse
-      })
+    const status = await axios.delete(API_URL_BASE + `/books/${id}`)
+      .then((resp) => resp.status)
       .catch(console.log)
 
-    if (responseData === undefined) {
+    if (status !== 200) {
       return false
     }
 
     const newIndex = new Map(index)
-    newIndex.delete(responseData.id)
+    newIndex.delete(id)
     setIndex(newIndex)
+
     return true
   }
 

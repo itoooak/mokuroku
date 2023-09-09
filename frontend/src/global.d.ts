@@ -5,29 +5,17 @@ interface BookData {
 
 type Index = Map<ID, BookData>;
 
-type UpsertRequest = {
+type CreateRequest = {
   id: ID,
   data: BookData,
 };
 
-type UpsertResponse = UpdateResponse | CreateResponse;
+type UpdateRequest = {
+  data: BookData,
+};
 
 type UpdateResponse = {
   id: ID,
   old: BookData,
   new: BookData,
-};
-
-type CreateResponse = {
-  id: ID,
-  new: BookData,
-};
-
-type DeleteRequest = {
-  id: ID,
-};
-
-type DeleteResponse = {
-  id: ID,
-  data: BookData,
 };

@@ -21,7 +21,7 @@ type Index = HashMap<ID, BookData>;
 
 const DATA_PATH: &str = "../data/data.json";
 
-#[derive(Clone, Serialize, Deserialize)]
+#[derive(Clone, PartialEq, Debug, Serialize, Deserialize)]
 struct BookData {
     title: String,
 }
@@ -43,63 +43,70 @@ async fn get_item_list(list: State<Arc<RwLock<Index>>>) -> impl IntoResponse {
 }
 
 #[derive(Serialize, Deserialize)]
-struct UpsertRequest {
+struct CreateRequest {
     id: ID,
     data: BookData,
 }
 
-async fn upsert_item(
+async fn create_item(
     list: State<Arc<RwLock<Index>>>,
-    Json(request): Json<UpsertRequest>,
+    Json(request): Json<CreateRequest>,
 ) -> impl IntoResponse {
-    let result = (*list)
-        .write()
-        .unwrap()
-        .insert(request.id.clone(), request.data.clone());
+    if (*list).read().unwrap().contains_key(&request.id) {
+        StatusCode::BAD_REQUEST
+    } else {
+        let result = (*list).write().unwrap().insert(request.id, request.data);
+        assert_eq!(result, None);
 
-    let content = serde_json::to_vec_pretty(&*list.read().unwrap()).unwrap();
-    fs::write(DATA_PATH, content).expect("failed to save data to file");
+        let content = serde_json::to_vec_pretty(&*list.read().unwrap()).unwrap();
+        fs::write(DATA_PATH, content).expect("failed to save data to file");
 
-    match result {
-        Some(old) => ErasedJson::pretty(json!({
-            "id": request.id,
-            "old": old,
-            "new": request.data
-        })),
-        None => ErasedJson::pretty(json!({
-            "id": request.id,
-            "new": request.data
-        })),
+        StatusCode::OK
     }
 }
 
 #[derive(Serialize, Deserialize)]
-struct DeleteRequest {
-    id: ID,
+struct UpdateRequest {
+    data: BookData,
 }
 
-async fn delete_item(
+async fn update_item(
     list: State<Arc<RwLock<Index>>>,
-    Json(request): Json<DeleteRequest>,
+    Path(id): Path<ID>,
+    Json(request): Json<UpdateRequest>,
 ) -> impl IntoResponse {
-    let result = (*list).write().unwrap().remove(&request.id);
+    if !(*list).read().unwrap().contains_key(&id) {
+        (StatusCode::NOT_FOUND, ErasedJson::pretty(json!({})))
+    } else {
+        let result = (*list)
+            .write()
+            .unwrap()
+            .insert(id.clone(), request.data.clone());
+        let body = match result {
+            Some(old) => ErasedJson::pretty(json!({
+                "id": id,
+                "old": old,
+                "new": request.data
+            })),
+            None => unreachable!(),
+        };
+
+        let content = serde_json::to_vec_pretty(&*list.read().unwrap()).unwrap();
+        fs::write(DATA_PATH, content).expect("failed to save data to file");
+
+        (StatusCode::OK, body)
+    }
+}
+
+async fn delete_item(list: State<Arc<RwLock<Index>>>, Path(id): Path<ID>) -> impl IntoResponse {
+    let result = (*list).write().unwrap().remove(&id);
     match result {
-        Some(data) => {
+        Some(_) => {
             let content = serde_json::to_vec_pretty(&*list.read().unwrap()).unwrap();
             fs::write(DATA_PATH, content).expect("failed to save data to file");
-
-            (
-                StatusCode::OK,
-                ErasedJson::pretty(json!({
-                    "id": request.id,
-                    "data": data,
-                })),
-            )
+            StatusCode::OK
         }
-        None => (
-            StatusCode::NOT_FOUND,
-            ErasedJson::pretty(json!({ "not exists": request.id })),
-        ),
+        None => StatusCode::NOT_FOUND,
     }
 }
 
@@ -117,11 +124,11 @@ async fn get_item(list: State<Arc<RwLock<Index>>>, Path(id): Path<ID>) -> impl I
 async fn main() {
     let app = Router::new()
         .route("/", get(|| async { "Hello, World!" }))
+        .route("/books", get(get_item_list).post(create_item))
         .route(
-            "/books",
-            get(get_item_list).post(upsert_item).delete(delete_item),
+            "/books/:id",
+            get(get_item).put(update_item).delete(delete_item),
         )
-        .route("/books/:id", get(get_item))
         .with_state(Arc::new(RwLock::new(init_data())))
         .layer(
             CorsLayer::new()
