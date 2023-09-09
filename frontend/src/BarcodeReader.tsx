@@ -67,7 +67,13 @@ const BarcodeReader: React.FC = () => {
       <button onClick={() => setScanning(!scanning)}>{scanning ? 'Stop' : 'Start'}</button>
 
       <ul>
-        {results.map((result, i) => (result.codeResult && <BarcodeReaderResult key={i} result={result} />))}
+        {
+          Array.from(
+            new Map(results.map(result => [result.codeResult.code, result]))
+              .entries()
+          )
+            .map(([key, val]) => <BarcodeReaderResult key={key} result={val} />)
+        }
       </ul>
 
       <div ref={scannerRef} style={{ position: 'relative', border: '3px solid red' }}>
