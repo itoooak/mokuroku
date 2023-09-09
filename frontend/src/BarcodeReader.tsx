@@ -83,37 +83,39 @@ const BarcodeReader: React.FC = () => {
         {scanning ? 'Stop' : 'Start'}
       </button>
 
-      <ul>
-        {Array.from(
-          new Map(
-            results.map((result) => [result.codeResult.code, result]),
-          ).entries(),
-        ).map(([key, val]) => (
-          <BarcodeReaderResult key={key} result={val} />
-        ))}
-      </ul>
-
-      <div
-        ref={scannerRef}
-        style={{ position: 'relative', border: '3px solid red' }}
-      >
-        <canvas
-          className='drawingBuffer'
-          style={{
-            position: 'absolute',
-            top: '0px',
-            border: '3px solid green',
-          }}
-          width='640'
-          height='480'
-        />
-        {scanning ? (
-          <BarcodeScanner
-            scannerRef={scannerRef}
-            cameraId={cameraId}
-            onDetected={(result) => setResults([...results, result])}
+      <div style={{ display: 'flex', alignItems: 'flex-start' }}>
+        <div
+          ref={scannerRef}
+          style={{ position: 'relative', border: '3px solid red' }}
+        >
+          <canvas
+            className='drawingBuffer'
+            style={{
+              position: 'absolute',
+              top: '0px',
+              border: '3px solid green',
+            }}
+            width='640'
+            height='480'
           />
-        ) : null}
+          {scanning ? (
+            <BarcodeScanner
+              scannerRef={scannerRef}
+              cameraId={cameraId}
+              onDetected={(result) => setResults([...results, result])}
+            />
+          ) : null}
+        </div>
+
+        <ul style={{ flex: 'initial' }}>
+          {Array.from(
+            new Map(
+              results.map((result) => [result.codeResult.code, result]),
+            ).entries(),
+          ).map(([key, val]) => (
+            <BarcodeReaderResult key={key} result={val} />
+          ))}
+        </ul>
       </div>
     </div>
   );
