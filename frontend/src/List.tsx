@@ -8,9 +8,9 @@ const List: React.FC<ListProps> = (props) => {
   return (
     <ul>
       {
-        props.items.map(([_, data]) => {
+        props.items.map(([id, data]) => {
           return (
-            <li>{data.title}</li>
+            <li key={id}>{data.title}</li>
           )
         })
       }

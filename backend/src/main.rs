@@ -118,7 +118,7 @@ async fn main() {
         .with_state(Arc::new(RwLock::new(init_data())))
         .layer(
             CorsLayer::new()
-                .allow_origin("http://localhost:5173".parse::<HeaderValue>().unwrap())
+                .allow_origin("http://127.0.0.1:5173".parse::<HeaderValue>().unwrap())
                 .allow_methods(Any),
         );
 
