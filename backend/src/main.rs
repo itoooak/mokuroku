@@ -62,13 +62,13 @@ async fn upsert_item(
 
     match result {
         Some(old) => ErasedJson::pretty(json!({
-            "updated": request.id,
+            "id": request.id,
             "old": old,
             "new": request.data
         })),
         None => ErasedJson::pretty(json!({
-            "created": request.id,
-            "data": request.data
+            "id": request.id,
+            "new": request.data
         })),
     }
 }
@@ -119,6 +119,8 @@ async fn main() {
         .layer(
             CorsLayer::new()
                 .allow_origin("http://127.0.0.1:5173".parse::<HeaderValue>().unwrap())
+                .allow_origin("http://localhost:5173".parse::<HeaderValue>().unwrap())
+                .allow_headers(Any)
                 .allow_methods(Any),
         );
 
