@@ -65,11 +65,35 @@ function App() {
     return true
   }
 
+  const updateItem = async (id: ID, data: BookData) => {
+    if (!index.has(id)) {
+      return false
+    }
+
+    const status = await axios.put(
+      API_URL_BASE + `/books/${id}`,
+      { data: data },
+    )
+      .then((resp) => resp.status)
+      .catch(console.log)
+
+    if (status !== 200) {
+      return false
+    }
+
+    const newIndex = new Map(index)
+    newIndex.set(id, data)
+    setIndex(newIndex)
+
+    return true
+  }
+
   return (
     <>
       <List
         items={Array.from(index.entries())}
         delete={deleteItem}
+        update={updateItem}
       />
       <AddItemPanel add={addItem} />
     </>

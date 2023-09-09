@@ -1,8 +1,10 @@
 import React from 'react';
+import ListItem from './ListItem';
 
 export interface ListProps {
   items: [ID, BookData][],
   delete: (id: ID) => Promise<boolean>,
+  update: (id: ID, data: BookData) => Promise<boolean>,
 }
 
 const List: React.FC<ListProps> = (props) => {
@@ -11,20 +13,11 @@ const List: React.FC<ListProps> = (props) => {
       {
         props.items.map(([id, data]) => {
           return (
-            <li key={id}>
-              <h2>{data.title}</h2>
-              <button
-                onClick={async () => {
-                  const successful = await props.delete(id)
-
-                  if (successful) {
-                    alert("deleted successfully")
-                  } else {
-                    alert("not found")
-                  }
-                }}
-              >削除</button>
-            </li>
+            <ListItem
+              id={id} data={data}
+              delete={props.delete}
+              update={props.update}
+            />
           )
         })
       }
