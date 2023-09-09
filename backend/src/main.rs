@@ -1,6 +1,6 @@
 use axum::{
     extract::{Path, State},
-    http::StatusCode,
+    http::{HeaderValue, StatusCode},
     response::IntoResponse,
     routing::get,
     Json, Router,
@@ -14,6 +14,7 @@ use std::{
     io::Read,
     sync::{Arc, RwLock},
 };
+use tower_http::cors::{Any, CorsLayer};
 
 type ID = String;
 type Index = HashMap<ID, BookData>;
@@ -114,7 +115,12 @@ async fn main() {
             get(get_item_list).post(upsert_item).delete(delete_item),
         )
         .route("/books/:id", get(get_item))
-        .with_state(Arc::new(RwLock::new(init_data())));
+        .with_state(Arc::new(RwLock::new(init_data())))
+        .layer(
+            CorsLayer::new()
+                .allow_origin("http://localhost:5173".parse::<HeaderValue>().unwrap())
+                .allow_methods(Any),
+        );
 
     let addr = "127.0.0.1:3000";
     println!("listening on http://{}", addr);
