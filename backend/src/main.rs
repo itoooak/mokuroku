@@ -116,7 +116,10 @@ async fn main() {
         .route("/books/:id", get(get_item))
         .with_state(Arc::new(RwLock::new(init_data())));
 
-    axum::Server::bind(&"127.0.0.1:3000".parse().unwrap())
+    let addr = "127.0.0.1:3000";
+    println!("listening on http://{}", addr);
+
+    axum::Server::bind(&addr.parse().unwrap())
         .serve(app.into_make_service())
         .await
         .unwrap();
