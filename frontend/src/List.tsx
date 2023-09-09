@@ -14,6 +14,7 @@ const List: React.FC<ListProps> = (props) => {
         props.items.map(([id, data]) => {
           return (
             <ListItem
+              key={id}
               id={id} data={data}
               delete={props.delete}
               update={props.update}

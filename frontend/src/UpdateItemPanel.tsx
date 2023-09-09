@@ -29,7 +29,7 @@ const UpdateItemPanel: React.FC<UpdateItemPanelProps> = (props) => {
           setData({ title: e.target.value })
         }}
       />
-      <input type='submit'>更新</input>
+      <input type='submit' value='更新' />
     </form>
   )
 }

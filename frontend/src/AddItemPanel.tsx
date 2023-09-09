@@ -37,7 +37,7 @@ const AddItemPanel: React.FC<AddItemPanelProps> = (props) => {
 					setData({ title: e.target.value })
 				}}
 			/>
-			<input type='submit'>追加</input>
+			<input type='submit' value='追加' />
 		</form>
 	)
 }
