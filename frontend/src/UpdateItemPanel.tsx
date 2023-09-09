@@ -1,37 +1,39 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
 
 export interface UpdateItemPanelProps {
-  id: ID,
-  update: (id: ID, data: BookData) => Promise<boolean>,
+  id: ID;
+  update: (id: ID, data: BookData) => Promise<boolean>;
 }
 
 const UpdateItemPanel: React.FC<UpdateItemPanelProps> = (props) => {
-  const [data, setData] = useState<BookData>({ title: "" });
+  const [data, setData] = useState<BookData>({ title: '' });
 
   return (
-    <form onSubmit={async (e) => {
-      e.preventDefault()
-      if (data.title === "")
-        return
+    <form
+      onSubmit={async (e) => {
+        e.preventDefault();
+        if (data.title === '') return;
 
-      const successful = await props.update(props.id, data)
+        const successful = await props.update(props.id, data);
 
-      if (successful) {
-        alert("updated successfully")
-      } else {
-        alert("failed to update")
-      }
-    }}>
+        if (successful) {
+          alert('updated successfully');
+        } else {
+          alert('failed to update');
+        }
+      }}
+    >
       <label>title</label>
       <input
-        type='text' value={data?.title}
+        type='text'
+        value={data?.title}
         onChange={(e) => {
-          setData({ title: e.target.value })
+          setData({ title: e.target.value });
         }}
       />
       <input type='submit' value='更新' />
     </form>
-  )
-}
+  );
+};
 
-export default UpdateItemPanel
+export default UpdateItemPanel;

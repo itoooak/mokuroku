@@ -1,5 +1,8 @@
 import React, { useCallback, useLayoutEffect } from 'react';
-import Quagga, { QuaggaJSCodeReader, QuaggaJSResultObject } from '@ericblade/quagga2';
+import Quagga, {
+  QuaggaJSCodeReader,
+  QuaggaJSResultObject,
+} from '@ericblade/quagga2';
 
 function getMedian(arr: number[]) {
   const newArr = [...arr];
@@ -11,8 +14,12 @@ function getMedian(arr: number[]) {
   return (newArr[half - 1] + newArr[half]) / 2;
 }
 
-function getMedianOfCodeErrors(decodedCodes: { error?: number, code?: number, start: number, end: number }[]) {
-  const errors = decodedCodes.flatMap(x => x.error).filter(x => x !== undefined);
+function getMedianOfCodeErrors(
+  decodedCodes: { error?: number; code?: number; start: number; end: number }[],
+) {
+  const errors = decodedCodes
+    .flatMap((x) => x.error)
+    .filter((x) => x !== undefined);
   const medianOfErrors = getMedian(errors as number[]);
   return medianOfErrors;
 }
@@ -51,34 +58,50 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
   decoders = defaultDecoders,
   locate = true,
 }: BarcodeScannerProps) => {
-  const errorCheck = useCallback((result: QuaggaJSResultObject) => {
-    if (!onDetected) {
-      return;
-    }
-    const err = getMedianOfCodeErrors(result.codeResult.decodedCodes);
-    if (err < 0.25) {
-      onDetected(result);
-    }
-  }, [onDetected]);
+  const errorCheck = useCallback(
+    (result: QuaggaJSResultObject) => {
+      if (!onDetected) {
+        return;
+      }
+      const err = getMedianOfCodeErrors(result.codeResult.decodedCodes);
+      if (err < 0.25) {
+        onDetected(result);
+      }
+    },
+    [onDetected],
+  );
 
   const handleProcessed = (result: QuaggaJSResultObject) => {
     const drawingCtx = Quagga.canvas.ctx.overlay;
     const drawingCanvas = Quagga.canvas.dom.overlay;
-    drawingCtx.font = "24px Arial";
+    drawingCtx.font = '24px Arial';
     drawingCtx.fillStyle = 'green';
 
     if (result) {
       if (result.boxes) {
-        drawingCtx.clearRect(0, 0, parseInt(drawingCanvas.getAttribute('width') ?? "err"), parseInt(drawingCanvas.getAttribute('height') ?? "err"));
-        result.boxes.filter((box) => box !== result.box).forEach((box) => {
-          Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, { color: 'purple', lineWidth: 2 });
-        });
+        drawingCtx.clearRect(
+          0,
+          0,
+          parseInt(drawingCanvas.getAttribute('width') ?? 'err'),
+          parseInt(drawingCanvas.getAttribute('height') ?? 'err'),
+        );
+        result.boxes
+          .filter((box) => box !== result.box)
+          .forEach((box) => {
+            Quagga.ImageDebug.drawPath(box, { x: 0, y: 1 }, drawingCtx, {
+              color: 'purple',
+              lineWidth: 2,
+            });
+          });
       }
       if (result.box) {
-        Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, { color: 'blue', lineWidth: 2 });
+        Quagga.ImageDebug.drawPath(result.box, { x: 0, y: 1 }, drawingCtx, {
+          color: 'blue',
+          lineWidth: 2,
+        });
       }
       if (result.codeResult && result.codeResult.code) {
-        drawingCtx.font = "24px Arial";
+        drawingCtx.font = '24px Arial';
         drawingCtx.fillText(result.codeResult.code, 10, 20);
       }
     }
@@ -92,30 +115,33 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
         return;
       }
 
-      await Quagga.init({
-        inputStream: {
-          type: 'LiveStream',
-          constraints: {
-            ...constraints,
-            ...(cameraId && { deviceId: cameraId }),
-            ...(!cameraId && { facingMode }),
+      await Quagga.init(
+        {
+          inputStream: {
+            type: 'LiveStream',
+            constraints: {
+              ...constraints,
+              ...(cameraId && { deviceId: cameraId }),
+              ...(!cameraId && { facingMode }),
+            },
+            target: scannerRef.current,
+            willReadFrequently: true,
           },
-          target: scannerRef.current,
-          willReadFrequently: true,
+          locator,
+          decoder: { readers: decoders },
+          locate,
         },
-        locator,
-        decoder: { readers: decoders },
-        locate,
-      }, async (err) => {
-        Quagga.onProcessed(handleProcessed);
+        async (err) => {
+          Quagga.onProcessed(handleProcessed);
 
-        if (err) {
-          return console.error('Error starting Quagga:', err);
-        }
-        if (scannerRef && scannerRef.current) {
-          Quagga.start();
-        }
-      });
+          if (err) {
+            return console.error('Error starting Quagga:', err);
+          }
+          if (scannerRef && scannerRef.current) {
+            Quagga.start();
+          }
+        },
+      );
       Quagga.onDetected(errorCheck);
     };
     init();
@@ -125,9 +151,18 @@ const BarcodeScanner: React.FC<BarcodeScannerProps> = ({
       Quagga.offDetected(errorCheck);
       Quagga.offProcessed(handleProcessed);
     };
-  }, [cameraId, onDetected, scannerRef, errorCheck, constraints, locator, decoders, locate, facingMode]);
+  }, [
+    cameraId,
+    onDetected,
+    scannerRef,
+    errorCheck,
+    constraints,
+    locator,
+    decoders,
+    locate,
+    facingMode,
+  ]);
   return null;
-}
+};
 
 export default BarcodeScanner;
-
