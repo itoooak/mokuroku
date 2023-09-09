@@ -87,12 +87,19 @@ async fn delete_item(
         Some(data) => {
             let content = serde_json::to_vec_pretty(&*list.read().unwrap()).unwrap();
             fs::write(DATA_PATH, content).expect("failed to save data to file");
-            ErasedJson::pretty(json!({
-                "deleted": request.id,
-                "data": data,
-            }))
+
+            (
+                StatusCode::OK,
+                ErasedJson::pretty(json!({
+                    "id": request.id,
+                    "data": data,
+                })),
+            )
         }
-        None => ErasedJson::pretty(json!({ "not exists": request.id })),
+        None => (
+            StatusCode::NOT_FOUND,
+            ErasedJson::pretty(json!({ "not exists": request.id })),
+        ),
     }
 }
 

@@ -12,6 +12,9 @@ const AddItemPanel: React.FC<AddItemPanelProps> = (props) => {
 		<>
 			<form onSubmit={async (e) => {
 				e.preventDefault()
+				if (id === "" || data.title === "")
+					return
+
 				const successful = await props.add(id, data)
 
 				if (successful) {

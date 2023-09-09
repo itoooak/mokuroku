@@ -42,9 +42,42 @@ function App() {
     return true
   }
 
+  const deleteItem = async (id: ID) => {
+    if (!index.has(id)) {
+      return false
+    }
+
+    const responseData = await axios.delete(
+      "http://127.0.0.1:3000/books",
+      {
+        headers: {},
+        data: { id: id },
+      }
+    )
+      .then((resp) => {
+        if (resp.status != 200)
+          throw Error("not found")
+
+        return resp.data as DeleteResponse
+      })
+      .catch(console.log)
+
+    if (responseData === undefined) {
+      return false
+    }
+
+    const newIndex = new Map(index)
+    newIndex.delete(responseData.id)
+    setIndex(newIndex)
+    return true
+  }
+
   return (
     <>
-      <List items={Array.from(index.entries())} />
+      <List
+        items={Array.from(index.entries())}
+        delete={deleteItem}
+      />
       <AddItemPanel add={addItem} />
     </>
   )

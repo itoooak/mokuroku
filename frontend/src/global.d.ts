@@ -26,3 +26,8 @@ type CreateResponse = {
 type DeleteRequest = {
   id: ID,
 };
+
+type DeleteResponse = {
+  id: ID,
+  data: BookData,
+};
