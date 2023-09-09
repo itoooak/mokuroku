@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import axios from 'axios'
 import List from './List';
 import AddItemPanel from './AddItemPanel';
+import BarcodeReader from './BarcodeReader';
 
 const API_URL_BASE = "http://127.0.0.1:3000";
 
@@ -96,6 +97,8 @@ function App() {
         update={updateItem}
       />
       <AddItemPanel add={addItem} />
+
+      <BarcodeReader />
     </>
   )
 }
