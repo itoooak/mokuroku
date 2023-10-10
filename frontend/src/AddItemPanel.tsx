@@ -17,7 +17,7 @@ const AddItemPanel: React.FC<AddItemPanelProps> = (props) => {
         const successful = await props.add(id, data);
 
         if (successful) {
-          alert('updated successfully');
+          alert('added successfully');
         } else {
           alert('already exists');
         }
