@@ -9,7 +9,11 @@ import {
 import BarcodeScanner from './BarcodeScanner';
 import BarcodeReaderResult from './BarcodeReaderResult';
 
-const BarcodeReader: React.FC = () => {
+interface BarcodeReaderProps {
+  add: (id: ID, data: BookData) => Promise<boolean>;
+}
+
+const BarcodeReader: React.FC<BarcodeReaderProps> = (props) => {
   const [scanning, setScanning] = useState(false);
   const [cameras, setCameras] = useState<MediaDeviceInfo[]>([]);
   const [cameraId, setCameraId] = useState('');
@@ -52,6 +56,10 @@ const BarcodeReader: React.FC = () => {
       Quagga.CameraAccess.disableTorch();
     }
   }, [torchOn, setTorch]);
+
+  const clearResultList = () => {
+    setResults(() => []);
+  };
 
   return (
     <div>
@@ -113,7 +121,12 @@ const BarcodeReader: React.FC = () => {
               results.map((result) => [result.codeResult.code, result]),
             ).entries(),
           ).map(([key, val]) => (
-            <BarcodeReaderResult key={key} result={val} />
+            <BarcodeReaderResult
+              key={key}
+              result={val}
+              add={props.add}
+              clearResultList={clearResultList}
+            />
           ))}
         </ul>
       </div>

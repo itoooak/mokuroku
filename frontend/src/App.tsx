@@ -96,7 +96,7 @@ function App() {
       />
       <AddItemPanel add={addItem} />
 
-      <BarcodeReader />
+      <BarcodeReader add={addItem} />
     </>
   );
 }
