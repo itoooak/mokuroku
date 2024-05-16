@@ -8,6 +8,7 @@ const API_URL_BASE = 'http://127.0.0.1:3000';
 
 function App() {
   const [index, setIndex] = useState<Index>(new Map());
+  const [selectedInput, setSelectedInput] = useState<string>();
 
   useEffect(() => {
     axios
@@ -94,9 +95,24 @@ function App() {
         delete={deleteItem}
         update={updateItem}
       />
-      <AddItemPanel add={addItem} />
 
-      <BarcodeReader add={addItem} />
+      <label>
+        Input:
+        <select
+          value={selectedInput}
+          onChange={(e) => setSelectedInput(e.target.value)}
+        >
+          <option value='noinput'>no input</option>
+          <option value='manual'>manual</option>
+          <option value='barcode'>barcode</option>
+        </select>
+      </label>
+
+      {selectedInput === 'manual' ? (
+        <AddItemPanel add={addItem} />
+      ) : selectedInput === 'barcode' ? (
+        <BarcodeReader add={addItem} />
+      ) : null}
     </>
   );
 }
