@@ -4,13 +4,13 @@
 backend
 ```
 cd backend/
-cargo run
+FRONTEND_ADDR=$FRONTEND_ADDR cargo run
 ```
 
 frontend
 ```
 cd frontend/
-pnpm dev
+VITE_API_URL_BASE=$BACKEND_ADDR pnpm dev --host
 ```
 
 format(frontend)

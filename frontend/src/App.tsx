@@ -4,7 +4,8 @@ import List from './List';
 import AddItemPanel from './AddItemPanel';
 import BarcodeReader from './BarcodeReader';
 
-const API_URL_BASE = 'http://127.0.0.1:3000';
+// cf. https://ja.vitejs.dev/guide/env-and-mode.html
+const API_URL_BASE = import.meta.env.VITE_API_URL_BASE;
 
 function App() {
   const [index, setIndex] = useState<Index>(new Map());

@@ -10,6 +10,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::json;
 use std::{
     collections::HashMap,
+    env,
     fs::{self, File},
     io::Read,
     sync::{Arc, RwLock},
@@ -132,13 +133,17 @@ async fn main() {
         .with_state(Arc::new(RwLock::new(init_data())))
         .layer(
             CorsLayer::new()
-                .allow_origin("http://127.0.0.1:5173".parse::<HeaderValue>().unwrap())
-                .allow_origin("http://localhost:5173".parse::<HeaderValue>().unwrap())
+                .allow_origin(
+                    env::var("FRONTEND_ADDR")
+                        .unwrap()
+                        .parse::<HeaderValue>()
+                        .unwrap(),
+                )
                 .allow_headers(Any)
                 .allow_methods(Any),
         );
 
-    let addr = "127.0.0.1:3000";
+    let addr = "0.0.0.0:3000";
     println!("listening on http://{}", addr);
 
     axum::Server::bind(&addr.parse().unwrap())
