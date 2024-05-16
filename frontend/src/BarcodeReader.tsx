@@ -115,20 +115,26 @@ const BarcodeReader: React.FC<BarcodeReaderProps> = (props) => {
           ) : null}
         </div>
 
-        <ul style={{ flex: 'initial' }}>
-          {Array.from(
-            new Map(
-              results.map((result) => [result.codeResult.code, result]),
-            ).entries(),
-          ).map(([key, val]) => (
-            <BarcodeReaderResult
-              key={key}
-              result={val}
-              add={props.add}
-              clearResultList={clearResultList}
-            />
-          ))}
-        </ul>
+        <div style={{ flex: 'initial' }}>
+          {results.length === 0 ? null : (
+            <button onClick={clearResultList}>Clear Scan Result</button>
+          )}
+
+          <ul>
+            {Array.from(
+              new Map(
+                results.map((result) => [result.codeResult.code, result]),
+              ).entries(),
+            ).map(([key, val]) => (
+              <BarcodeReaderResult
+                key={key}
+                result={val}
+                add={props.add}
+                clearResultList={clearResultList}
+              />
+            ))}
+          </ul>
+        </div>
       </div>
     </div>
   );
