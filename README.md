@@ -9,5 +9,12 @@ cargo run
 
 frontend
 ```
+cd frontend/
 pnpm dev
+```
+
+format(frontend)
+```
+cd frontend/
+pnpm exec prettier . --write
 ```
