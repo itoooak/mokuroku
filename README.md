@@ -2,19 +2,20 @@
 蔵書管理システムになる予定
 
 backend
-```
+```sh
 cd backend/
 FRONTEND_ADDR=$FRONTEND_ADDR cargo run
 ```
 
 frontend
-```
+```sh
 cd frontend/
-VITE_API_URL_BASE=$BACKEND_ADDR pnpm dev --host
+docker build -t mokuroku-frontend --build-arg BACKEND_ADDR=$BACKEND_ADDR .
+docker run -p $FRONTEND_PORT:80 mokuroku-frontend
 ```
 
 format(frontend)
-```
+```sh
 cd frontend/
 pnpm exec prettier . --write
 ```
