@@ -18,6 +18,8 @@ const AddItemPanel: React.FC<AddItemPanelProps> = (props) => {
 
         if (successful) {
           alert('added successfully');
+          setId('');
+          setData({ title: '' });
         } else {
           alert('already exists');
         }

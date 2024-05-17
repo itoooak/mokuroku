@@ -18,6 +18,7 @@ const UpdateItemPanel: React.FC<UpdateItemPanelProps> = (props) => {
 
         if (successful) {
           alert('updated successfully');
+          setData({ title: '' });
         } else {
           alert('failed to update');
         }
