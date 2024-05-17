@@ -5,4 +5,5 @@ RUN cargo install --path .
 
 FROM alpine
 COPY --from=builder /usr/local/cargo/bin/backend /usr/local/bin/backend
+WORKDIR /usr/local/bin
 CMD [ "backend" ]
