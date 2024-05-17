@@ -4,7 +4,8 @@
 backend
 ```sh
 cd backend/
-FRONTEND_ADDR=$FRONTEND_ADDR cargo run
+docker build -t mokuroku-backend .
+docker run -p $BACKEND_PORT:3000 -e FRONTEND_ADDR=$FRONTEND_ADDR mokuroku-backend
 ```
 
 frontend
