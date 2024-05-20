@@ -1,9 +1,8 @@
-FROM rust:1.77-alpine as builder
+FROM rust:1.77 as builder
 COPY . .
-RUN apk --no-cache add musl-dev
 RUN cargo install --path .
 
-FROM alpine
+FROM gcr.io/distroless/cc
 COPY --from=builder /usr/local/cargo/bin/backend /usr/local/bin/backend
 WORKDIR /usr/local/bin
 CMD [ "backend" ]
