@@ -1,9 +1,13 @@
-FROM rust:1.77-alpine as builder
-COPY . .
-RUN apk --no-cache add musl-dev
-RUN cargo install --path .
+FROM rust:1.77 as builder
+COPY [ "Cargo.toml", "Cargo.lock", "./" ]
+RUN mkdir src && echo "fn main() {}" > src/main.rs
+RUN cargo build --release
 
-FROM alpine
-COPY --from=builder /usr/local/cargo/bin/backend /usr/local/bin/backend
+COPY src/ src/
+RUN touch src/main.rs
+RUN cargo build --release
+
+FROM gcr.io/distroless/cc:nonroot
+COPY --from=builder --chown=nonroot:nonroot /target/release/backend /usr/local/bin/backend
 WORKDIR /usr/local/bin
 CMD [ "backend" ]
