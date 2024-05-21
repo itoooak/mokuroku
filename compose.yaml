@@ -13,5 +13,6 @@ services:
       - "${BACKEND_PORT}:3000"
     environment:
       - FRONTEND_ADDR=http://${HOSTNAME}:${FRONTEND_PORT}
+      - BACKEND_PORT
     volumes:
       - ./data:/usr/local/data

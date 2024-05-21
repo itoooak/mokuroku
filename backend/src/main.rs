@@ -137,13 +137,16 @@ async fn main() {
                     env::var("FRONTEND_ADDR")
                         .unwrap()
                         .parse::<HeaderValue>()
-                        .unwrap(),
+                        .expect("address of frontend server not provided"),
                 )
                 .allow_headers(Any)
                 .allow_methods(Any),
         );
 
-    let addr = "0.0.0.0:3000";
+    let addr = format!(
+        "0.0.0.0:{}",
+        env::var("BACKEND_PORT").expect("port number not provided")
+    );
     println!("listening on http://{}", addr);
 
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
