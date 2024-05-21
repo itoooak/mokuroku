@@ -10,7 +10,7 @@ importers:
     dependencies:
       '@ericblade/quagga2':
         specifier: ^1.8.2
-        version: 1.8.2
+        version: 1.8.4
       axios:
         specifier: ^1.5.0
         version: 1.5.0
@@ -29,7 +29,7 @@ importers:
         version: 18.2.7
       '@typescript-eslint/eslint-plugin':
         specifier: ^6.0.0
-        version: 6.0.0(@typescript-eslint/parser@6.0.0)(eslint@8.45.0)(typescript@5.0.2)
+        version: 6.0.0(@typescript-eslint/parser@6.0.0(eslint@8.45.0)(typescript@5.0.2))(eslint@8.45.0)(typescript@5.0.2)
       '@typescript-eslint/parser':
         specifier: ^6.0.0
         version: 6.0.0(eslint@8.45.0)(typescript@5.0.2)
@@ -175,8 +175,8 @@ packages:
     resolution: {integrity: sha512-YSQPHLFtQNE5xN9tHuZnzu8vPr61wVTBZdfv1meex1NBosa4iT05k/Jw06ddJugi4bk7The/oSwQGFcksmEJQg==}
     engines: {node: '>=6.9.0'}
 
-  '@ericblade/quagga2@1.8.2':
-    resolution: {integrity: sha512-UCVC6nnE0z8sjdpJqtIHJDqRdVMdK3oJdDx0O1LhBK+eKqm01upTGEEFo2lglsAaW1cVrnxWEcwHmUnNUP0ukg==}
+  '@ericblade/quagga2@1.8.4':
+    resolution: {integrity: sha512-Wy0G29x3fxvmv+k11IbPL6eY+5xwdU+lj48Buhxiw8f1uyNuvrd5SomjWIi9ohuIJbCmsKuaOa5nqlvvSLVErg==}
     engines: {node: '>= 10.0'}
 
   '@esbuild/android-arm64@0.18.20':
@@ -497,8 +497,8 @@ packages:
   aws-sign2@0.7.0:
     resolution: {integrity: sha512-08kcGqnYf/YmjoRhfxyu+CLxBjUtHLXLXX/vUfx9l2LYzG3c1m61nrpyFUZI6zeS+Li/wWMMidD9KgrqtGq3mA==}
 
-  aws4@1.12.0:
-    resolution: {integrity: sha512-NmWvPnx0F1SfrQbYwOi7OeaNGokp9XhzNioJ/CSBs8Qa4vxug81mhJEAVZwxXuBmYB5KDRfMq/F3RR0BIU7sWg==}
+  aws4@1.13.0:
+    resolution: {integrity: sha512-3AungXC4I8kKsS9PuS4JH2nc+0bVY/mjgrephHTIi8fpEeGsTHBUJeosp0Wc1myYMElmD0B3Oc4XL/HVJ4PV2g==}
 
   axios@1.5.0:
     resolution: {integrity: sha512-D4DdjDo5CY50Qms0qGQTTw6Q44jl7zRwY7bthds06pUGfChBCTcQs+N743eFWGEd6pRTMd6A+I87aWyFV5wiZQ==}
@@ -755,11 +755,6 @@ packages:
 
   fs.realpath@1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}
-
-  fsevents@2.3.2:
-    resolution: {integrity: sha512-xiqMQR4xAeHTuB9uWm+fFRcIOgKBMiOBP+eXiyT7jsgVCq1bkVygt00oASowB7EdtpOHaaPgKt812P9ab+DDKA==}
-    engines: {node: ^8.16.0 || ^10.6.0 || >=11.0.0}
-    os: [darwin]
 
   fsevents@2.3.3:
     resolution: {integrity: sha512-5xoDfX+fL7faATnagmWPpbFtwh/R77WmMMqqHGS65C3vvB0YHrgF+B1YmZ3441tMj5n63k0212XNoJwzlhffQw==}
@@ -1078,6 +1073,10 @@ packages:
     resolution: {integrity: sha512-rRV+zQD8tVFys26lAGR9WUuS4iUAngJScM+ZRSKtvl5tKeZ2t5bvdNFdNHBW9FWR4guGHlgmsZ1G7BSm2wTbuA==}
     engines: {node: '>=6'}
 
+  punycode@2.3.1:
+    resolution: {integrity: sha512-vYt7UD1U9Wg6138shLtLOvdAu+8DsC/ilFtEVHcH+wydcSpNE20AfSOduf6MkRFahL5FY7X1oU7nKVZFtfq8Fg==}
+    engines: {node: '>=6'}
+
   qs@6.5.3:
     resolution: {integrity: sha512-qxXIEh4pCGfHICj1mAJQ2/2XVZkjCDTcEgfoSQxc/fYivUZxTkk7L3bDBJSoNrEzXI17oUO5Dp07ktqE5KzczA==}
     engines: {node: '>=0.6'}
@@ -1160,8 +1159,8 @@ packages:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
     engines: {node: '>=0.10.0'}
 
-  sshpk@1.17.0:
-    resolution: {integrity: sha512-/9HIEs1ZXGhSPE8X6Ccm7Nam1z8KcoCqPdI7ecm1N33EzAetWahvQWVqLZtaZQ+IDKX4IyA2o0gBzqIMkAagHQ==}
+  sshpk@1.18.0:
+    resolution: {integrity: sha512-2p2KJZTSqQ/I3+HX42EpYOa2l3f8Erv8MWKsy2I9uf4wA7yFIkXRffYdsx86y6z4vHtV8u7g+pPlr8/4ouAxsQ==}
     engines: {node: '>=0.10.0'}
     hasBin: true
 
@@ -1442,7 +1441,7 @@ snapshots:
       '@babel/helper-validator-identifier': 7.22.15
       to-fast-properties: 2.0.0
 
-  '@ericblade/quagga2@1.8.2':
+  '@ericblade/quagga2@1.8.4':
     dependencies:
       '@babel/polyfill': 7.12.1
       get-pixels: 3.3.3
@@ -1451,7 +1450,7 @@ snapshots:
       ndarray: 1.0.19
       ndarray-linear-interpolate: 1.0.0
     optionalDependencies:
-      fsevents: 2.3.2
+      fsevents: 2.3.3
 
   '@esbuild/android-arm64@0.18.20':
     optional: true
@@ -1601,7 +1600,7 @@ snapshots:
 
   '@types/semver@7.5.1': {}
 
-  '@typescript-eslint/eslint-plugin@6.0.0(@typescript-eslint/parser@6.0.0)(eslint@8.45.0)(typescript@5.0.2)':
+  '@typescript-eslint/eslint-plugin@6.0.0(@typescript-eslint/parser@6.0.0(eslint@8.45.0)(typescript@5.0.2))(eslint@8.45.0)(typescript@5.0.2)':
     dependencies:
       '@eslint-community/regexpp': 4.8.0
       '@typescript-eslint/parser': 6.0.0(eslint@8.45.0)(typescript@5.0.2)
@@ -1618,6 +1617,7 @@ snapshots:
       natural-compare-lite: 1.4.0
       semver: 7.5.4
       ts-api-utils: 1.0.3(typescript@5.0.2)
+    optionalDependencies:
       typescript: 5.0.2
     transitivePeerDependencies:
       - supports-color
@@ -1630,6 +1630,7 @@ snapshots:
       '@typescript-eslint/visitor-keys': 6.0.0
       debug: 4.3.4
       eslint: 8.45.0
+    optionalDependencies:
       typescript: 5.0.2
     transitivePeerDependencies:
       - supports-color
@@ -1646,6 +1647,7 @@ snapshots:
       debug: 4.3.4
       eslint: 8.45.0
       ts-api-utils: 1.0.3(typescript@5.0.2)
+    optionalDependencies:
       typescript: 5.0.2
     transitivePeerDependencies:
       - supports-color
@@ -1661,6 +1663,7 @@ snapshots:
       is-glob: 4.0.3
       semver: 7.5.4
       ts-api-utils: 1.0.3(typescript@5.0.2)
+    optionalDependencies:
       typescript: 5.0.2
     transitivePeerDependencies:
       - supports-color
@@ -1732,7 +1735,7 @@ snapshots:
 
   aws-sign2@0.7.0: {}
 
-  aws4@1.12.0: {}
+  aws4@1.13.0: {}
 
   axios@1.5.0:
     dependencies:
@@ -2024,9 +2027,6 @@ snapshots:
 
   fs.realpath@1.0.0: {}
 
-  fsevents@2.3.2:
-    optional: true
-
   fsevents@2.3.3:
     optional: true
 
@@ -2103,7 +2103,7 @@ snapshots:
     dependencies:
       assert-plus: 1.0.0
       jsprim: 1.4.2
-      sshpk: 1.17.0
+      sshpk: 1.18.0
 
   ignore@5.2.4: {}
 
@@ -2307,6 +2307,8 @@ snapshots:
 
   punycode@2.3.0: {}
 
+  punycode@2.3.1: {}
+
   qs@6.5.3: {}
 
   queue-microtask@1.2.3: {}
@@ -2328,7 +2330,7 @@ snapshots:
   request@2.88.2:
     dependencies:
       aws-sign2: 0.7.0
-      aws4: 1.12.0
+      aws4: 1.13.0
       caseless: 0.12.0
       combined-stream: 1.0.8
       extend: 3.0.2
@@ -2388,7 +2390,7 @@ snapshots:
 
   source-map-js@1.0.2: {}
 
-  sshpk@1.17.0:
+  sshpk@1.18.0:
     dependencies:
       asn1: 0.2.6
       assert-plus: 1.0.0
@@ -2427,7 +2429,7 @@ snapshots:
   tough-cookie@2.5.0:
     dependencies:
       psl: 1.9.0
-      punycode: 2.3.0
+      punycode: 2.3.1
 
   ts-api-utils@1.0.3(typescript@5.0.2):
     dependencies:
