@@ -20,7 +20,9 @@ const UpdateItemPanel: React.FC<UpdateItemPanelProps> = (props) => {
           alert('updated successfully');
           setData({ title: '' }); // 更新後はフォームをクリア
         } else {
-          alert(`failed to update: status ${result.statusCode}, ${result.message}`);
+          alert(
+            `failed to update: status ${result.statusCode}, ${result.message}`,
+          );
         }
       }}
     >

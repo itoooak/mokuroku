@@ -26,7 +26,9 @@ const BarcodeReaderResult: React.FC<BarcodeReaderResultProps> = (props) => {
             alert('added successfully');
             props.clearResultList();
           } else {
-            alert(`failed to add item: status ${result.statusCode}, ${result.message}`);
+            alert(
+              `failed to add item: status ${result.statusCode}, ${result.message}`,
+            );
           }
         }}
       >

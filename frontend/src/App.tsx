@@ -27,7 +27,11 @@ function App() {
 
   const addItem = async (book: Book): Promise<APIResult> => {
     if (index.has(book.id)) {
-      return { successful: false, statusCode: undefined, message: `ID ${book.id} already in use` }
+      return {
+        successful: false,
+        statusCode: undefined,
+        message: `ID ${book.id} already in use`,
+      };
     }
 
     const status = await axios
@@ -36,19 +40,23 @@ function App() {
       .catch(console.log);
 
     if (status !== 200) {
-      return { successful: false, statusCode: status, message: "" }
+      return { successful: false, statusCode: status, message: '' };
     }
 
     const newIndex = new Map(index);
     newIndex.set(book.id, book);
     setIndex(newIndex);
 
-    return { successful: true, statusCode: status, message: "" };
+    return { successful: true, statusCode: status, message: '' };
   };
 
   const deleteItem = async (id: ID): Promise<APIResult> => {
     if (!index.has(id)) {
-      return { successful: false, statusCode: undefined, message: `ID ${id} not found` }
+      return {
+        successful: false,
+        statusCode: undefined,
+        message: `ID ${id} not found`,
+      };
     }
 
     const status = await axios
@@ -57,19 +65,23 @@ function App() {
       .catch(console.log);
 
     if (status !== 200) {
-      return { successful: false, statusCode: status, message: "" };
+      return { successful: false, statusCode: status, message: '' };
     }
 
     const newIndex = new Map(index);
     newIndex.delete(id);
     setIndex(newIndex);
 
-    return { successful: true, statusCode: status, message: "" };
+    return { successful: true, statusCode: status, message: '' };
   };
 
   const updateItem = async (id: ID, book: Book): Promise<APIResult> => {
     if (!index.has(id)) {
-      return { successful: false, statusCode: undefined, message: `ID ${id} not found` }
+      return {
+        successful: false,
+        statusCode: undefined,
+        message: `ID ${id} not found`,
+      };
     }
 
     const status = await axios
@@ -78,14 +90,14 @@ function App() {
       .catch(console.log);
 
     if (status !== 200) {
-      return { successful: false, statusCode: status, message: "" };
+      return { successful: false, statusCode: status, message: '' };
     }
 
     const newIndex = new Map(index);
     newIndex.set(book.id, book);
     setIndex(newIndex);
 
-    return { successful: true, statusCode: status, message: "" };
+    return { successful: true, statusCode: status, message: '' };
   };
 
   return (

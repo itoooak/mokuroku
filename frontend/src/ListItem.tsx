@@ -34,7 +34,9 @@ const ListItem: React.FC<ListItemProps> = (props) => {
           if (result.successful) {
             alert('deleted successfully');
           } else {
-            alert(`failed to delete item: status ${result.statusCode}, ${result.message}`);
+            alert(
+              `failed to delete item: status ${result.statusCode}, ${result.message}`,
+            );
           }
         }}
       >
