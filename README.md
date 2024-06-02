@@ -11,6 +11,7 @@ docker compose up
 - `HOSTNAME`
 - `FRONTEND_PORT`
 - `BACKEND_PORT`
+- `DATABASE_PASSWORD`
 
 ## format(frontend)
 ```sh
