@@ -14,5 +14,18 @@ services:
     environment:
       - FRONTEND_ADDR=http://${HOSTNAME}:${FRONTEND_PORT}
       - BACKEND_PORT
+      - DATABASE_ADDR=postgres://postgres:${DATABASE_PASSWORD}@database
     volumes:
       - ./data:/usr/local/data
+
+  database:
+    image: postgres
+    restart: always
+    environment:
+      - POSTGRES_PASSWORD=${DATABASE_PASSWORD}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+      - ./data/init:/docker-entrypoint-initdb.d
+
+volumes:
+  db_data:

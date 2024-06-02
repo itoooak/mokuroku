@@ -1,21 +1,17 @@
 type ID = string;
+
+interface Book extends BookData {
+  id: ID;
+}
+
 interface BookData {
   title: string;
 }
 
-type Index = Map<ID, BookData>;
+type Index = Map<ID, Book>;
 
-type CreateRequest = {
-  id: ID;
-  data: BookData;
-};
-
-type UpdateRequest = {
-  data: BookData;
-};
-
-type UpdateResponse = {
-  id: ID;
-  old: BookData;
-  new: BookData;
+type APIResult = {
+  successful: boolean;
+  statusCode: number | void;
+  message: string;
 };

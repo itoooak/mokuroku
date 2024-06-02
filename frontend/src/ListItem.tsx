@@ -3,9 +3,9 @@ import UpdateItemPanel from './UpdateItemPanel';
 
 export interface ListItemProps {
   id: ID;
-  data: BookData;
-  delete: (id: ID) => Promise<boolean>;
-  update: (id: ID, data: BookData) => Promise<boolean>;
+  book: Book;
+  delete: (id: ID) => Promise<APIResult>;
+  update: (id: ID, book: Book) => Promise<APIResult>;
 }
 
 const ListItem: React.FC<ListItemProps> = (props) => {
@@ -13,7 +13,7 @@ const ListItem: React.FC<ListItemProps> = (props) => {
 
   return (
     <li key={props.id}>
-      <h2>{props.data.title}</h2>
+      <h2>{props.book.title}</h2>
 
       <button
         onClick={() => {
@@ -29,12 +29,14 @@ const ListItem: React.FC<ListItemProps> = (props) => {
 
       <button
         onClick={async () => {
-          const successful = await props.delete(props.id);
+          const result = await props.delete(props.id);
 
-          if (successful) {
+          if (result.successful) {
             alert('deleted successfully');
           } else {
-            alert('not found');
+            alert(
+              `failed to delete item: status ${result.statusCode}, ${result.message}`,
+            );
           }
         }}
       >

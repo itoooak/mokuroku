@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 
 interface BarcodeReaderResultProps {
   result: QuaggaJSResultObject;
-  add: (id: ID, data: BookData) => Promise<boolean>;
+  add: (book: Book) => Promise<APIResult>;
   clearResultList: () => void;
 }
 
@@ -19,14 +19,16 @@ const BarcodeReaderResult: React.FC<BarcodeReaderResultProps> = (props) => {
           if (!props.result.codeResult.code) return;
           if (data.title === '') return;
 
-          const isbnCode = props.result.codeResult.code as string;
-          const successful = await props.add(isbnCode, data);
+          const isbnCode = props.result.codeResult.code;
+          const result = await props.add({ id: isbnCode, ...data });
 
-          if (successful) {
+          if (result.successful) {
             alert('added successfully');
             props.clearResultList();
           } else {
-            alert('already exists');
+            alert(
+              `failed to add item: status ${result.statusCode}, ${result.message}`,
+            );
           }
         }}
       >
