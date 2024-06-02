@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 
 export interface UpdateItemPanelProps {
   id: ID;
-  update: (id: ID, data: BookData) => Promise<boolean>;
+  update: (id: ID, book: Book) => Promise<APIResult>;
 }
 
 const UpdateItemPanel: React.FC<UpdateItemPanelProps> = (props) => {
@@ -14,13 +14,13 @@ const UpdateItemPanel: React.FC<UpdateItemPanelProps> = (props) => {
         e.preventDefault();
         if (data.title === '') return;
 
-        const successful = await props.update(props.id, data);
+        const result = await props.update(props.id, { id: props.id, ...data });
 
-        if (successful) {
+        if (result.successful) {
           alert('updated successfully');
-          setData({ title: '' });
+          setData({ title: '' }); // 更新後はフォームをクリア
         } else {
-          alert('failed to update');
+          alert(`failed to update: status ${result.statusCode}, ${result.message}`);
         }
       }}
     >

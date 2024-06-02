@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 export interface AddItemPanelProps {
-  add: (id: ID, data: BookData) => Promise<boolean>;
+  add: (book: Book) => Promise<APIResult>;
 }
 
 const AddItemPanel: React.FC<AddItemPanelProps> = (props) => {
@@ -14,14 +14,14 @@ const AddItemPanel: React.FC<AddItemPanelProps> = (props) => {
         e.preventDefault();
         if (id === '' || data.title === '') return;
 
-        const successful = await props.add(id, data);
+        const result = await props.add({ id, ...data });
 
-        if (successful) {
+        if (result.successful) {
           alert('added successfully');
           setId('');
           setData({ title: '' });
         } else {
-          alert('already exists');
+          alert(`failed to add item: status ${result.statusCode}, ${result.message}`);
         }
       }}
     >

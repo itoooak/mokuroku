@@ -2,9 +2,9 @@ import React from 'react';
 import ListItem from './ListItem';
 
 export interface ListProps {
-  items: [ID, BookData][];
-  delete: (id: ID) => Promise<boolean>;
-  update: (id: ID, data: BookData) => Promise<boolean>;
+  items: [ID, Book][];
+  delete: (id: ID) => Promise<APIResult>;
+  update: (id: ID, book: Book) => Promise<APIResult>;
 }
 
 const List: React.FC<ListProps> = (props) => {
@@ -15,7 +15,7 @@ const List: React.FC<ListProps> = (props) => {
           <ListItem
             key={id}
             id={id}
-            data={data}
+            book={data}
             delete={props.delete}
             update={props.update}
           />

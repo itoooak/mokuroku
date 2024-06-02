@@ -10,7 +10,7 @@ import BarcodeScanner from './BarcodeScanner';
 import BarcodeReaderResult from './BarcodeReaderResult';
 
 interface BarcodeReaderProps {
-  add: (id: ID, data: BookData) => Promise<boolean>;
+  add: (book: Book) => Promise<APIResult>;
 }
 
 const BarcodeReader: React.FC<BarcodeReaderProps> = (props) => {

@@ -15,41 +15,40 @@ function App() {
     axios
       .get(API_URL_BASE + '/books')
       .then((resp) => resp.data)
-      .then(Object.entries)
       .then((entries) => {
         const newIndex: Index = new Map();
-        entries.forEach((entry: [ID, BookData]) => {
-          newIndex.set(entry[0], entry[1]);
+        entries.forEach((book: Book) => {
+          newIndex.set(book.id, book);
         });
         setIndex(newIndex);
       })
-      .catch((err) => console.log(err));
+      .catch(console.log);
   }, []);
 
-  const addItem = async (id: ID, data: BookData) => {
-    if (index.has(id)) {
-      return false;
+  const addItem = async (book: Book): Promise<APIResult> => {
+    if (index.has(book.id)) {
+      return { successful: false, statusCode: undefined, message: `ID ${book.id} already in use` }
     }
 
     const status = await axios
-      .post(API_URL_BASE + '/books', { id: id, data: data })
+      .post(API_URL_BASE + '/books', book)
       .then((resp) => resp.status)
       .catch(console.log);
 
     if (status !== 200) {
-      return false;
+      return { successful: false, statusCode: status, message: "" }
     }
 
     const newIndex = new Map(index);
-    newIndex.set(id, data);
+    newIndex.set(book.id, book);
     setIndex(newIndex);
 
-    return true;
+    return { successful: true, statusCode: status, message: "" };
   };
 
-  const deleteItem = async (id: ID) => {
+  const deleteItem = async (id: ID): Promise<APIResult> => {
     if (!index.has(id)) {
-      return false;
+      return { successful: false, statusCode: undefined, message: `ID ${id} not found` }
     }
 
     const status = await axios
@@ -58,35 +57,35 @@ function App() {
       .catch(console.log);
 
     if (status !== 200) {
-      return false;
+      return { successful: false, statusCode: status, message: "" };
     }
 
     const newIndex = new Map(index);
     newIndex.delete(id);
     setIndex(newIndex);
 
-    return true;
+    return { successful: true, statusCode: status, message: "" };
   };
 
-  const updateItem = async (id: ID, data: BookData) => {
+  const updateItem = async (id: ID, book: Book): Promise<APIResult> => {
     if (!index.has(id)) {
-      return false;
+      return { successful: false, statusCode: undefined, message: `ID ${id} not found` }
     }
 
     const status = await axios
-      .put(API_URL_BASE + `/books/${id}`, { data: data })
+      .put(API_URL_BASE + `/books/${id}`, book)
       .then((resp) => resp.status)
       .catch(console.log);
 
     if (status !== 200) {
-      return false;
+      return { successful: false, statusCode: status, message: "" };
     }
 
     const newIndex = new Map(index);
-    newIndex.set(id, data);
+    newIndex.set(book.id, book);
     setIndex(newIndex);
 
-    return true;
+    return { successful: true, statusCode: status, message: "" };
   };
 
   return (
