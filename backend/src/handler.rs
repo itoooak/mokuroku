@@ -44,7 +44,7 @@ pub async fn update_item<T: BooksDB>(
     match db.update(&id, book).await {
         Ok(v) => (StatusCode::OK, ErasedJson::pretty(json!(v))),
         Err(db::Error::NotFoundError) => (StatusCode::NOT_FOUND, ErasedJson::new("not found")),
-        Err(db::Error::ParamInvalidError(s)) => (StatusCode::NOT_FOUND, ErasedJson::new(s)),
+        Err(db::Error::ParamInvalidError(s)) => (StatusCode::BAD_REQUEST, ErasedJson::new(s)),
         Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, ErasedJson::new("error")),
     }
 }
