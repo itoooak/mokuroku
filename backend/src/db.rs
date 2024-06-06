@@ -4,9 +4,9 @@ use sqlx::PgPool;
 
 #[derive(Debug)]
 pub enum Error {
-    SqlxError(sqlx::Error),
-    ParamInvalidError(String),
-    NotFoundError,
+    Sqlx(sqlx::Error),
+    ParamInvalid(String),
+    NotFound,
 }
 
 pub trait BooksDB {
@@ -34,7 +34,7 @@ impl BooksDB for PgBooksDB {
             .await
         {
             Ok(v) => Ok(v),
-            Err(e) => Err(Error::SqlxError(e)),
+            Err(e) => Err(Error::Sqlx(e)),
         }
     }
 
@@ -45,8 +45,8 @@ impl BooksDB for PgBooksDB {
             .await
         {
             Ok(v) => Ok(v),
-            Err(sqlx::Error::RowNotFound) => Err(Error::NotFoundError),
-            Err(e) => Err(Error::SqlxError(e)),
+            Err(sqlx::Error::RowNotFound) => Err(Error::NotFound),
+            Err(e) => Err(Error::Sqlx(e)),
         }
     }
 
@@ -58,13 +58,13 @@ impl BooksDB for PgBooksDB {
             .await
         {
             Ok(v) => Ok(v),
-            Err(e) => Err(Error::SqlxError(e)),
+            Err(e) => Err(Error::Sqlx(e)),
         }
     }
 
     async fn update(&self, id: &str, book: Book) -> Result<Book, Error> {
         if id != book.id {
-            return Err(Error::ParamInvalidError(
+            return Err(Error::ParamInvalid(
                 "id and book.id not match".to_string(),
             ));
         }
@@ -76,8 +76,8 @@ impl BooksDB for PgBooksDB {
             .await
         {
             Ok(v) => Ok(v),
-            Err(sqlx::Error::RowNotFound) => Err(Error::NotFoundError),
-            Err(e) => Err(Error::SqlxError(e)),
+            Err(sqlx::Error::RowNotFound) => Err(Error::NotFound),
+            Err(e) => Err(Error::Sqlx(e)),
         }
     }
 
@@ -88,8 +88,8 @@ impl BooksDB for PgBooksDB {
             .await
         {
             Ok(_) => Ok(()),
-            Err(sqlx::Error::RowNotFound) => Err(Error::NotFoundError),
-            Err(e) => Err(Error::SqlxError(e)),
+            Err(sqlx::Error::RowNotFound) => Err(Error::NotFound),
+            Err(e) => Err(Error::Sqlx(e)),
         }
     }
 }

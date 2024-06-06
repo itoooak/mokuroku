@@ -21,7 +21,7 @@ pub async fn get_item_list<T: BooksDB>(db: State<Arc<T>>) -> impl IntoResponse {
 pub async fn get_item<T: BooksDB>(db: State<Arc<T>>, Path(id): Path<String>) -> impl IntoResponse {
     match db.get(&id).await {
         Ok(v) => (StatusCode::OK, ErasedJson::pretty(json!(v))),
-        Err(db::Error::NotFoundError) => (StatusCode::NOT_FOUND, ErasedJson::new("not found")),
+        Err(db::Error::NotFound) => (StatusCode::NOT_FOUND, ErasedJson::new("not found")),
         Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, ErasedJson::new("error")),
     }
 }
@@ -43,8 +43,8 @@ pub async fn update_item<T: BooksDB>(
 ) -> impl IntoResponse {
     match db.update(&id, book).await {
         Ok(v) => (StatusCode::OK, ErasedJson::pretty(json!(v))),
-        Err(db::Error::NotFoundError) => (StatusCode::NOT_FOUND, ErasedJson::new("not found")),
-        Err(db::Error::ParamInvalidError(s)) => (StatusCode::BAD_REQUEST, ErasedJson::new(s)),
+        Err(db::Error::NotFound) => (StatusCode::NOT_FOUND, ErasedJson::new("not found")),
+        Err(db::Error::ParamInvalid(s)) => (StatusCode::BAD_REQUEST, ErasedJson::new(s)),
         Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, ErasedJson::new("error")),
     }
 }
@@ -55,7 +55,7 @@ pub async fn delete_item<T: BooksDB>(
 ) -> impl IntoResponse {
     match db.delete(&id).await {
         Ok(_) => (StatusCode::OK, ErasedJson::pretty(json!(()))),
-        Err(db::Error::NotFoundError) => (StatusCode::NOT_FOUND, ErasedJson::new("not found")),
+        Err(db::Error::NotFound) => (StatusCode::NOT_FOUND, ErasedJson::new("not found")),
         Err(_) => (StatusCode::INTERNAL_SERVER_ERROR, ErasedJson::new("error")),
     }
 }
