@@ -1,10 +1,17 @@
-use backend::handler::*;
-use backend::*;
+mod db;
+mod handler;
+use handler::*;
 
 use axum::{http::HeaderValue, routing::get, Router};
 use sqlx::postgres::PgPoolOptions;
 use std::{env, sync::Arc};
 use tower_http::cors::{Any, CorsLayer};
+
+#[derive(Debug, Clone, PartialEq, sqlx::FromRow, serde::Serialize, serde::Deserialize)]
+pub struct Book {
+    pub id: String,
+    pub title: String,
+}
 
 #[tokio::main]
 async fn main() {
