@@ -3,6 +3,7 @@ mod handler;
 use handler::*;
 
 use axum::{http::HeaderValue, routing::get, Router};
+use chrono::{DateTime, Utc};
 use sqlx::postgres::PgPoolOptions;
 use std::{env, sync::Arc};
 use tower_http::cors::{Any, CorsLayer};
@@ -11,6 +12,8 @@ use tower_http::cors::{Any, CorsLayer};
 pub struct Book {
     pub id: String,
     pub title: String,
+    pub obtained: Option<DateTime<Utc>>,
+    pub finished: Option<DateTime<Utc>>,
 }
 
 #[tokio::main]
