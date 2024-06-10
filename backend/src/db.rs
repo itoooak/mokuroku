@@ -52,11 +52,12 @@ impl BooksDB for PgBooksDB {
 
     async fn create(&self, book: Book) -> Result<Book, Error> {
         match sqlx::query_as(
-            "INSERT INTO Books(id, title, obtained) VALUES ($1, $2, $3) RETURNING *",
+            "INSERT INTO Books(id, title, obtained, memo_link) VALUES ($1, $2, $3, $4) RETURNING *",
         )
         .bind(book.id)
         .bind(book.title)
         .bind(book.obtained)
+        .bind(book.memo_link)
         .fetch_one(&self.pool)
         .await
         {
@@ -70,12 +71,15 @@ impl BooksDB for PgBooksDB {
             return Err(Error::ParamInvalid("id and book.id not match".to_string()));
         }
 
-        match sqlx::query_as("UPDATE Books SET title = $2, obtained = $3 WHERE id = $1 RETURNING *")
-            .bind(id)
-            .bind(book.title)
-            .bind(book.obtained)
-            .fetch_one(&self.pool)
-            .await
+        match sqlx::query_as(
+            "UPDATE Books SET title = $2, obtained = $3, memo_link = $4 WHERE id = $1 RETURNING *",
+        )
+        .bind(id)
+        .bind(book.title)
+        .bind(book.obtained)
+        .bind(book.memo_link)
+        .fetch_one(&self.pool)
+        .await
         {
             Ok(v) => Ok(v),
             Err(sqlx::Error::RowNotFound) => Err(Error::NotFound),

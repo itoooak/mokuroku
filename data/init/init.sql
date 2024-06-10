@@ -3,6 +3,7 @@ CREATE TABLE Books (
     title VARCHAR,
     obtained TIMESTAMPTZ,
     finished TIMESTAMPTZ,
+    memo_link VARCHAR,
     PRIMARY KEY (id)
 );
 
