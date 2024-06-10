@@ -25,7 +25,7 @@ pub struct Book {
     pub memo_link: Option<String>,
 }
 
-struct AppState<T: BooksDB>(pub Arc<T>);
+struct AppState<T: BooksDB>(Arc<T>);
 
 impl<T: BooksDB> Clone for AppState<T> {
     fn clone(&self) -> Self {
