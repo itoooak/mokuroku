@@ -9,6 +9,7 @@ pub enum Error {
     NotFound,
 }
 
+#[allow(async_fn_in_trait)]
 pub trait BooksDB {
     async fn get_list(&self) -> Result<Vec<Book>, Error>;
     async fn get(&self, id: &str) -> Result<Book, Error>;
