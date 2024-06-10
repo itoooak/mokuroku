@@ -1,16 +1,40 @@
 mod db;
 mod handler;
+use db::BooksDB;
 use handler::*;
 
-use axum::{http::HeaderValue, routing::get, Router};
+use axum::{extract::FromRef, http::HeaderValue, routing::get, Router};
+use chrono::{DateTime, Utc};
 use sqlx::postgres::PgPoolOptions;
 use std::{env, sync::Arc};
 use tower_http::cors::{Any, CorsLayer};
 
-#[derive(Debug, Clone, PartialEq, sqlx::FromRow, serde::Serialize, serde::Deserialize)]
+#[derive(
+    Debug, Clone, PartialEq, sqlx::FromRow, serde::Serialize, serde::Deserialize, garde::Validate,
+)]
 pub struct Book {
+    #[garde(length(min = 1))]
     pub id: String,
+    #[garde(length(min = 1))]
     pub title: String,
+    #[garde(skip)]
+    pub obtained: Option<DateTime<Utc>>,
+    #[garde(skip)]
+    pub finished: Option<DateTime<Utc>>,
+    #[garde(url)]
+    pub memo_link: Option<String>,
+}
+
+struct AppState<T: BooksDB>(Arc<T>);
+
+impl<T: BooksDB> Clone for AppState<T> {
+    fn clone(&self) -> Self {
+        Self(self.0.clone())
+    }
+}
+
+impl<T: BooksDB> FromRef<AppState<T>> for () {
+    fn from_ref(_: &AppState<T>) -> Self {}
 }
 
 #[tokio::main]
@@ -31,7 +55,7 @@ async fn main() {
             "/books/:id",
             get(get_item).put(update_item).delete(delete_item),
         )
-        .with_state(Arc::new(db))
+        .with_state(AppState(Arc::new(db)))
         .layer(
             CorsLayer::new()
                 .allow_origin(
