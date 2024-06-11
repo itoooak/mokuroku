@@ -53,11 +53,12 @@ impl BooksDB for PgBooksDB {
 
     async fn create(&self, book: Book) -> Result<Book, Error> {
         match sqlx::query_as(
-            "INSERT INTO Books(id, title, obtained, memo_link) VALUES ($1, $2, $3, $4) RETURNING *",
+            "INSERT INTO Books(id, title, obtained, finished, memo_link) VALUES ($1, $2, $3, $4, $5) RETURNING *",
         )
         .bind(book.id)
         .bind(book.title)
         .bind(book.obtained)
+        .bind(book.finished)
         .bind(book.memo_link)
         .fetch_one(&self.pool)
         .await
@@ -73,11 +74,12 @@ impl BooksDB for PgBooksDB {
         }
 
         match sqlx::query_as(
-            "UPDATE Books SET title = $2, obtained = $3, memo_link = $4 WHERE id = $1 RETURNING *",
+            "UPDATE Books SET title = $2, obtained = $3, finished = $4, memo_link = $5 WHERE id = $1 RETURNING *",
         )
         .bind(id)
         .bind(book.title)
         .bind(book.obtained)
+        .bind(book.finished)
         .bind(book.memo_link)
         .fetch_one(&self.pool)
         .await
