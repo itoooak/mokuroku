@@ -15,7 +15,7 @@ const AddItemPanel: React.FC<AddItemPanelProps> = (props) => {
         e.preventDefault();
         if (id === '' || data.title === '') return;
 
-        const result = await props.add({ id, ...data });
+        const result = await props.add({ id: 'manual:' + id, ...data });
 
         if (result.successful) {
           alert('added successfully');

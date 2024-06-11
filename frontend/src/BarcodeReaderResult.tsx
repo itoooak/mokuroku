@@ -21,7 +21,7 @@ const BarcodeReaderResult: React.FC<BarcodeReaderResultProps> = (props) => {
           if (data.title === '') return;
 
           const isbnCode = props.result.codeResult.code;
-          const result = await props.add({ id: isbnCode, ...data });
+          const result = await props.add({ id: 'isbn:' + isbnCode, ...data });
 
           if (result.successful) {
             alert('added successfully');
