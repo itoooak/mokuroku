@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import UpdateItemPanel from './UpdateItemPanel';
 
 export interface ListItemProps {
-  id: ID;
   book: Book;
   delete: (id: ID) => Promise<APIResult>;
   update: (id: ID, book: Book) => Promise<APIResult>;
@@ -12,7 +11,7 @@ const ListItem: React.FC<ListItemProps> = (props) => {
   const [isUpdating, setIsUpdating] = useState(false);
 
   return (
-    <li key={props.id}>
+    <li key={props.book.id}>
       <h2>{props.book.title}</h2>
 
       <button
@@ -24,12 +23,12 @@ const ListItem: React.FC<ListItemProps> = (props) => {
       </button>
 
       {isUpdating ? (
-        <UpdateItemPanel id={props.id} update={props.update} />
+        <UpdateItemPanel book={props.book} update={props.update} />
       ) : null}
 
       <button
         onClick={async () => {
-          const result = await props.delete(props.id);
+          const result = await props.delete(props.book.id);
 
           if (result.successful) {
             alert('deleted successfully');
