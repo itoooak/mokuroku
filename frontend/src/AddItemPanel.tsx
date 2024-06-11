@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { emptyBookData } from './util';
 
 export interface AddItemPanelProps {
   add: (book: Book) => Promise<APIResult>;
@@ -6,7 +7,7 @@ export interface AddItemPanelProps {
 
 const AddItemPanel: React.FC<AddItemPanelProps> = (props) => {
   const [id, setId] = useState<ID>('');
-  const [data, setData] = useState<BookData>({ title: '' });
+  const [data, setData] = useState<BookData>(emptyBookData);
 
   return (
     <form
@@ -19,7 +20,7 @@ const AddItemPanel: React.FC<AddItemPanelProps> = (props) => {
         if (result.successful) {
           alert('added successfully');
           setId('');
-          setData({ title: '' });
+          setData(emptyBookData);
         } else {
           alert(
             `failed to add item: status ${result.statusCode}, ${result.message}`,
@@ -41,7 +42,7 @@ const AddItemPanel: React.FC<AddItemPanelProps> = (props) => {
         type='text'
         value={data?.title}
         onChange={(e) => {
-          setData({ title: e.target.value });
+          setData({ ...emptyBookData, title: e.target.value });
         }}
       />
       <input type='submit' value='追加' />

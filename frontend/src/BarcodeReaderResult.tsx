@@ -1,5 +1,6 @@
 import { QuaggaJSResultObject } from '@ericblade/quagga2';
 import React, { useState } from 'react';
+import { emptyBookData } from './util';
 
 interface BarcodeReaderResultProps {
   result: QuaggaJSResultObject;
@@ -8,7 +9,7 @@ interface BarcodeReaderResultProps {
 }
 
 const BarcodeReaderResult: React.FC<BarcodeReaderResultProps> = (props) => {
-  const [data, setData] = useState<BookData>({ title: '' });
+  const [data, setData] = useState<BookData>(emptyBookData);
 
   return (
     <li>
@@ -37,7 +38,7 @@ const BarcodeReaderResult: React.FC<BarcodeReaderResultProps> = (props) => {
           type='text'
           value={data.title}
           onChange={(e) => {
-            setData({ title: e.target.value });
+            setData({ ...data, title: e.target.value });
           }}
         />
         <input type='submit' value='追加' />

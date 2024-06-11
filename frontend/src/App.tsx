@@ -17,7 +17,12 @@ function App() {
       .then((resp) => resp.data)
       .then((entries) => {
         const newIndex: Index = new Map();
-        entries.forEach((book: Book) => {
+        entries.forEach((item: any) => {
+          const book = {
+            ...item,
+            obtained: item.obtained ? new Date(item.obtained) : null,
+            finished: item.finished ? new Date(item.finished) : null,
+          };
           newIndex.set(book.id, book);
         });
         setIndex(newIndex);
@@ -84,8 +89,14 @@ function App() {
       };
     }
 
+    let data = {
+      ...book,
+      obtained: book.obtained?.toISOString(),
+      finished: book.finished?.toISOString(),
+    };
+
     const status = await axios
-      .put(API_URL_BASE + `/books/${id}`, book)
+      .put(API_URL_BASE + `/books/${id}`, data)
       .then((resp) => resp.status)
       .catch(console.log);
 

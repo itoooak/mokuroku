@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
+import { isValidDate } from './util';
 
 export interface UpdateItemPanelProps {
-  id: ID;
+  book: Book;
   update: (id: ID, book: Book) => Promise<APIResult>;
 }
 
 const UpdateItemPanel: React.FC<UpdateItemPanelProps> = (props) => {
-  const [data, setData] = useState<BookData>({ title: '' });
+  const [data, setData] = useState<BookData>(props.book);
 
   return (
     <form
@@ -14,11 +15,14 @@ const UpdateItemPanel: React.FC<UpdateItemPanelProps> = (props) => {
         e.preventDefault();
         if (data.title === '') return;
 
-        const result = await props.update(props.id, { id: props.id, ...data });
+        const result = await props.update(props.book.id, {
+          id: props.book.id,
+          ...data,
+        });
 
         if (result.successful) {
           alert('updated successfully');
-          setData({ title: '' }); // 更新後はフォームをクリア
+          setData(data);
         } else {
           alert(
             `failed to update: status ${result.statusCode}, ${result.message}`,
@@ -29,11 +33,32 @@ const UpdateItemPanel: React.FC<UpdateItemPanelProps> = (props) => {
       <label>title</label>
       <input
         type='text'
-        value={data?.title}
+        value={data.title}
         onChange={(e) => {
-          setData({ title: e.target.value });
+          setData({ ...data, title: e.target.value });
         }}
       />
+
+      <label>入手日</label>
+      <input
+        type='date'
+        value={data.obtained?.toISOString().split('T')[0]}
+        onChange={(e) => {
+          const date = new Date(e.target.value + 'T12:00:00');
+          setData({ ...data, obtained: isValidDate(date) ? date : null });
+        }}
+      />
+
+      <label>読了日</label>
+      <input
+        type='date'
+        value={data.finished?.toISOString().split('T')[0]}
+        onChange={(e) => {
+          const date = new Date(e.target.value + 'T12:00:00');
+          setData({ ...data, finished: isValidDate(date) ? date : null });
+        }}
+      />
+
       <input type='submit' value='更新' />
     </form>
   );

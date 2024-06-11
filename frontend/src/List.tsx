@@ -14,7 +14,6 @@ const List: React.FC<ListProps> = (props) => {
         return (
           <ListItem
             key={id}
-            id={id}
             book={data}
             delete={props.delete}
             update={props.update}
