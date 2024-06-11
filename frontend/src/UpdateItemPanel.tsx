@@ -59,6 +59,14 @@ const UpdateItemPanel: React.FC<UpdateItemPanelProps> = (props) => {
         }}
       />
 
+      <label>読書メモ</label>
+      <input
+        type='text'
+        value={data.memo_link || undefined}
+        onChange={(e) => {
+          setData({ ...data, memo_link: e.target.value || null });
+        }}
+      />
       <input type='submit' value='更新' />
     </form>
   );
