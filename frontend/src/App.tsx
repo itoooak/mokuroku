@@ -89,7 +89,7 @@ function App() {
       };
     }
 
-    let data = {
+    const data = {
       ...book,
       obtained: book.obtained?.toISOString(),
       finished: book.finished?.toISOString(),
