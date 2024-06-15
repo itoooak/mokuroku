@@ -9,6 +9,15 @@ pub enum Error {
     NotFound,
 }
 
+impl From<sqlx::Error> for Error {
+    fn from(value: sqlx::Error) -> Self {
+        match value {
+            sqlx::Error::RowNotFound => Error::NotFound,
+            e => Error::Sqlx(e),
+        }
+    }
+}
+
 #[allow(async_fn_in_trait)]
 pub trait BooksDB {
     async fn get_list(&self) -> Result<Vec<Book>, Error>;
@@ -30,29 +39,22 @@ impl PgBooksDB {
 
 impl BooksDB for PgBooksDB {
     async fn get_list(&self) -> Result<Vec<Book>, Error> {
-        match sqlx::query_as("SELECT * FROM Books")
+        let v = sqlx::query_as("SELECT * FROM Books")
             .fetch_all(&self.pool)
-            .await
-        {
-            Ok(v) => Ok(v),
-            Err(e) => Err(Error::Sqlx(e)),
-        }
+            .await?;
+        Ok(v)
     }
 
     async fn get(&self, id: &str) -> Result<Book, Error> {
-        match sqlx::query_as("SELECT * FROM Books WHERE id = $1")
+        let v = sqlx::query_as("SELECT * FROM Books WHERE id = $1")
             .bind(id)
             .fetch_one(&self.pool)
-            .await
-        {
-            Ok(v) => Ok(v),
-            Err(sqlx::Error::RowNotFound) => Err(Error::NotFound),
-            Err(e) => Err(Error::Sqlx(e)),
-        }
+            .await?;
+        Ok(v)
     }
 
     async fn create(&self, book: Book) -> Result<Book, Error> {
-        match sqlx::query_as(
+        let v = sqlx::query_as(
             "INSERT INTO Books(id, title, obtained, finished, memo_link) VALUES ($1, $2, $3, $4, $5) RETURNING *",
         )
         .bind(book.id)
@@ -61,11 +63,8 @@ impl BooksDB for PgBooksDB {
         .bind(book.finished)
         .bind(book.memo_link)
         .fetch_one(&self.pool)
-        .await
-        {
-            Ok(v) => Ok(v),
-            Err(e) => Err(Error::Sqlx(e)),
-        }
+        .await?;
+        Ok(v)
     }
 
     async fn update(&self, id: &str, book: Book) -> Result<Book, Error> {
@@ -73,7 +72,7 @@ impl BooksDB for PgBooksDB {
             return Err(Error::ParamInvalid("id and book.id not match".to_string()));
         }
 
-        match sqlx::query_as(
+        let v = sqlx::query_as(
             "UPDATE Books SET title = $2, obtained = $3, finished = $4, memo_link = $5 WHERE id = $1 RETURNING *",
         )
         .bind(id)
@@ -82,23 +81,15 @@ impl BooksDB for PgBooksDB {
         .bind(book.finished)
         .bind(book.memo_link)
         .fetch_one(&self.pool)
-        .await
-        {
-            Ok(v) => Ok(v),
-            Err(sqlx::Error::RowNotFound) => Err(Error::NotFound),
-            Err(e) => Err(Error::Sqlx(e)),
-        }
+        .await?;
+        Ok(v)
     }
 
     async fn delete(&self, id: &str) -> Result<(), Error> {
-        match sqlx::query("DELETE FROM Books WHERE id = $1")
+        sqlx::query("DELETE FROM Books WHERE id = $1")
             .bind(id)
             .execute(&self.pool)
-            .await
-        {
-            Ok(_) => Ok(()),
-            Err(sqlx::Error::RowNotFound) => Err(Error::NotFound),
-            Err(e) => Err(Error::Sqlx(e)),
-        }
+            .await?;
+        Ok(())
     }
 }
