@@ -1,14 +1,19 @@
 type ID = string;
 
+interface APIResp extends Book {
+  readonly obtained: string?;
+  readonly finished: string?;
+}
+
 interface Book extends BookData {
   readonly id: ID;
 }
 
 interface BookData {
-  title: string;
-  obtained: Date?;
-  finished: Date?;
-  memo_link: string?;
+  readonly title: string;
+  readonly obtained: Date?;
+  readonly finished: Date?;
+  readonly memo_link: string?;
 }
 
 type Index = Map<ID, Book>;

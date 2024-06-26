@@ -17,7 +17,7 @@ function App() {
       .then((resp) => resp.data)
       .then((entries) => {
         const newIndex: Index = new Map();
-        entries.forEach((item: any) => {
+        entries.forEach((item: APIResp) => {
           const book = {
             ...item,
             obtained: item.obtained ? new Date(item.obtained) : null,
