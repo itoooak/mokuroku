@@ -8,6 +8,7 @@ use chrono::{DateTime, Utc};
 use sqlx::postgres::PgPoolOptions;
 use std::{env, sync::Arc};
 use tower_http::cors::{Any, CorsLayer};
+use tracing::level_filters::LevelFilter;
 
 #[derive(
     Debug, Clone, PartialEq, sqlx::FromRow, serde::Serialize, serde::Deserialize, garde::Validate,
@@ -39,6 +40,11 @@ impl<T: BooksDB> FromRef<AppState<T>> for () {
 
 #[tokio::main]
 async fn main() {
+    tracing_subscriber::fmt()
+        .with_max_level(LevelFilter::INFO)
+        .init();
+    tracing::info!("start tracing");
+
     let db_addr = env::var("DATABASE_ADDR").expect("address of database not provided");
     let pool = PgPoolOptions::new()
         .max_connections(5)
