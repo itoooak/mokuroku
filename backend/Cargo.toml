@@ -10,7 +10,7 @@ axum = "0.7.0"
 axum-extra = { version = "0.9.0", features = ["erased-json"] }
 axum-valid = { version = "0.18.0", default-features = false, features = ["garde", "basic"] }
 chrono = { version = "0.4.38", features = ["serde"] }
-garde = { version = "0.18.0", features = ["derive", "url"] }
+garde = { version = "0.20.0", features = ["derive", "url"] }
 serde = { version = "1.0.188", features = ["derive"] }
 sqlx = { version = "0.7.4", features = ["postgres", "runtime-tokio", "chrono"] }
 tokio = { version = "1.32.0", features = ["full"] }
